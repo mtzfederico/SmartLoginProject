@@ -1,2 +1,2 @@
-# SmartLoginProject
+# SmartLoginProject beta branch
 

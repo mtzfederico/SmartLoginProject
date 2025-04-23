@@ -58,9 +58,10 @@ export function DataTable<TData, TValue>({
                 <Input
                     placeholder="Filter names..."
                     value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("name")?.setFilterValue(event.target.value)
-                    }
+                    onChange={(event) => {
+                        table.resetRowSelection(); // Deselect all rows
+                        table.getColumn("name")?.setFilterValue(event.target.value); // Apply filter
+                    }}
                     className="inputSearch"
                 />
                 <Button className={"submitButton"}>Submit</Button>

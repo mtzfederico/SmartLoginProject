@@ -1,0 +1,9 @@
+ListenOn: "0.0.0.0:9090"
+LogFile: ""
+DBAddress: "127.0.0.1:3306"
+DBUser: "root"
+DBPassword: "myVerySecretDBPassword1"
+DBName: "smartLoginProject"
+CanvasAPIToken: "token_goes_here"
+LogLevel: "trace"
+GINRelease: false

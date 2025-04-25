@@ -1,28 +1,20 @@
-import { useEffect, useState } from "react"
-import { Student, columns } from "./students/columns.tsx"
-import { DataTable } from "./students/data-table.tsx"
-import {getData} from "./students/getData.ts";
+import { useNavigate } from "react-router-dom"
+import { Button } from "@/components/ui/button"
 
 import '@/Page.css'
 
-export default function DemoPage() {
-    const [data, setData] = useState<Student[]>([])
-    const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        getData(31905)
-            .then((students) => setData(students))
-            .catch((err) => console.error("Error fetching students:", err))
-            .finally(() => setLoading(false))
-    }, [])
-
-    if (loading) return <div className="p-10">Loading...</div>
+export default function Page() {
+    const navigate = useNavigate()
 
     return (
-        <>
-            <div className="table-container">
-                <DataTable columns={columns} data={data} />
-            </div>
-        </>
+        <div className="body">
+            <h1>Hello</h1>
+            <main className="flex flex-col items-center justify-center min-h-screen gap-4">
+                <h1 className="text-4xl font-bold">Welcome</h1>
+                <p className="text-lg text-gray-500">Start by submitting an ID</p>
+                <Button onClick={() => navigate("/selection")}>Go to Selection Page</Button>
+                <Button onClick={() => navigate("/course-selection")}>Go to Course Page</Button>
+            </main>
+        </div>
     )
 }

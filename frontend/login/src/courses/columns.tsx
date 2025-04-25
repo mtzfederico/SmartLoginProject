@@ -8,13 +8,20 @@ import {ArrowUpDown} from "lucide-react";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Student = {
+export type Course = {
     id: string
     name: string
-    avatar_url: string
+    enrollment_term_id: string
 }
 
-export const columns: ColumnDef<Student>[] = [
+const termMap: Record<string, string> = {
+    "1": "Fall 2023",
+    "2": "Spring 2024",
+    "3": "Fall 2024",
+    "4": "Spring 2025",
+}
+
+export const columns: ColumnDef<Course>[] = [
     {
         id: "select",
         cell: ({ row, table }) => (
@@ -48,45 +55,29 @@ export const columns: ColumnDef<Student>[] = [
     },
     {
         accessorKey: "name",
+        header: "Course Name",
+    },
+    {
+        accessorKey: "enrollment_term_id",
         header: ({ column }) => {
             return (
                 <Button className={"sButton"}
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                        variant="ghost"
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Name
+                    Semester
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
         cell: ({ row }) => {
-            const avatar = row.original.avatar_url as string
-            const name = row.getValue("name") as string
-            return (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <div style={{ width: "60px", height: "60px", display: "flex", alignItems: "center", marginRight: "15px" }}>
-                        <img
-                            src={avatar}
-                            alt="Avatar"
-                            style={{
-                                width: "48px",
-                                height: "48px",
-                                borderRadius: "9999px",
-                                border: "2px solid #333",
-                                backgroundColor: "#222"
-                            }}
-                        />
-                    </div>
-                    <div>
-                        {name}
-                    </div>
-                </div>
-            )
-        },
+            const termId = row.getValue("enrollment_term_id") as string
+            return termMap[termId] ?? `???`
+        }
     },
     {
         accessorKey: "id",
-        header: "ID Test",
+        header: "Course ID",
     },
 ]
 

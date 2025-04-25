@@ -14,7 +14,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table.tsx"
 import * as React from "react";
 import {Input} from "@/components/ui/input.tsx";
 import {Button} from "@/components/ui/button.tsx";
@@ -53,18 +53,18 @@ export function DataTable<TData, TValue>({
 
     return (
         <div>
-
             <div className={"topButtons"}>
                 <Input
-                    placeholder="Filter names..."
+                    placeholder="Filter course names..."
                     value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
                     onChange={(event) => {
                         table.resetRowSelection(); // Deselect all rows
                         table.getColumn("name")?.setFilterValue(event.target.value); // Apply filter
                     }}
                     className="inputSearch"
+                    style={{width: "40%", }}
                 />
-                <Button className={"submitButton"}>Submit</Button>
+                <Button className={"submitButton"} style={{width: "40%", }}>Generate Attendance Group in Database</Button>
             </div>
 
             <div className="rounded-md border">

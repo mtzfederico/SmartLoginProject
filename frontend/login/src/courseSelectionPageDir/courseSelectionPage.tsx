@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Course, columns } from "@/courses/columns.tsx"
 import { DataTable } from "@/components/ui/data-table-courses.tsx"
-import {getCourses} from "@/courses/getCourses.ts";
+import { getCourses } from "@/TS Scripts/getCourses.ts";
 
 import '@/Page.css'
 
@@ -10,14 +10,22 @@ export default function SelectionPage() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        getCourses() // ← now correctly uses your imported function
-            .then((courses) => setData(courses))
+        getCourses()
+            .then((courses) => {
+                // Sort courses by a specific field, e.g., "name" in ascending order
+                const sortedCourses = courses.sort((a, b) =>
+                    parseInt(b.enrollment_term_id) - parseInt(a.enrollment_term_id)
+                );
+
+                setData(sortedCourses);
+            })
             .catch((err) => console.error("Error fetching courses:", err))
             .finally(() => setLoading(false))
     }, [])
 
 
-    if (loading) return <div className="p-10">Loading...</div>
+
+    if (loading) return <div className="p-10" style={{ color: "#FFFFF" }}>Loading...</div>
 
     return (
         <>

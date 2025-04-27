@@ -18,6 +18,7 @@ import {
 import * as React from "react";
 import {Input} from "@/components/ui/input.tsx";
 import {Button} from "@/components/ui/button.tsx";
+import {useNavigate} from "react-router-dom";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -34,6 +35,7 @@ export function DataTable<TData, TValue>({
     )
         React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
+    const navigate = useNavigate();
 
     const table = useReactTable({
         data,
@@ -64,7 +66,20 @@ export function DataTable<TData, TValue>({
                     className="inputSearch"
                     style={{width: "40%", }}
                 />
-                <Button className={"submitButton"} style={{width: "40%", }}>Generate Attendance Group in Database</Button>
+                <Button
+                    className={"submitButton"}
+                    style={{ width: "20%" }}
+                    onClick={() => {
+                        const selectedRow = table.getSelectedRowModel().rows[0]; // Get the first selected row (if any)
+                        if (selectedRow) {
+                            // Pass selected course to the next page
+                            navigate("/course-home", { state: { selectedCourse: selectedRow.original } });
+                        }
+                    }}
+                >
+                    Select Course
+                </Button>
+
             </div>
 
             <div className="rounded-md border">

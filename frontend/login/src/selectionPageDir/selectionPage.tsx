@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Student, columns } from "@/students/columns.tsx"
 import { DataTable } from "@/components/ui/data-table.tsx"
-import {getData} from "@/students/getData.ts";
+import {getData} from "@/TS Scripts/getData.ts";
 
 import '@/Page.css'
 

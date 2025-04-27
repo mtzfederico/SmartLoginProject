@@ -55,11 +55,18 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #ffffff;
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.button-large {
+
+  padding: 1rem 2rem;
+  font-size: 1.25rem;
+
 }
 
 @media (prefers-color-scheme: light) {

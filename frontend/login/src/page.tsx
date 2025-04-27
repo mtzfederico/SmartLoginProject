@@ -1,19 +1,35 @@
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
+import { getSelf } from "@/TS Scripts/getSelf.ts"
 
 import '@/Page.css'
+import {useEffect, useState} from "react";
 
 export default function Page() {
     const navigate = useNavigate()
+    const [userName, setUserName] = useState<string>("");
+
+    useEffect(() => {
+        async function fetchUser() {
+            try {
+                const name = await getSelf(); // getSelf returns 'name' from Canvas account object
+                setUserName(name);
+            } catch (error) {
+                console.error(error);
+                setUserName("Unknown User");
+            }
+        }
+        fetchUser();
+    }, []);
 
     return (
         <div className="body">
-            <h1>Hello</h1>
-            <main className="flex flex-col items-center justify-center min-h-screen gap-4">
-                <h1 className="text-4xl font-bold">Welcome</h1>
-                <p className="text-lg text-gray-500">Start by submitting an ID</p>
-                <Button onClick={() => navigate("/selection")}>Go to Selection Page</Button>
-                <Button onClick={() => navigate("/course-selection")}>Go to Course Page</Button>
+            <main className="flex logoSplasH">
+                <h1 className="logoSplash">Helo</h1>
+                <h1 className="text-4xl font-bold">Landing</h1>
+                <h1 className="text-4xl font-bold">Page!!</h1>
+                <p className="text-lg text-gray-500">Connected to Canvas as {userName ? userName : "Loading..."}</p>
+                <Button className={"button button-large"} onClick={() => navigate("/course-selection")}>View Courses</Button>
             </main>
         </div>
     )

@@ -92,3 +92,9 @@ tr[data-state="selected"] {
     margin: 1.5rem 0;
     gap: 1rem;
 }
+
+.logoSplasH{
+    text-align: center;
+    justify-items: center;
+    align-items: center;
+}

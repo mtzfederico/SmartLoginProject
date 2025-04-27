@@ -3,6 +3,7 @@ import Page from './page.tsx'
 import SwipePage from './swipePageDir/swipePage.tsx'
 import SelectionPage from './selectionPageDir/selectionPage.tsx'
 import CoursePage from './courseSelectionPageDir/courseSelectionPage.tsx'
+import CourseHome from './courseSelectionPageDir/courseHome.tsx'
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
                 <Route path="/swipe" element={<SwipePage />} />
                 <Route path="/selection" element={<SelectionPage />} />
                 <Route path="/course-selection" element={<CoursePage />} />
+                <Route path="/course-home" element={<CourseHome />} />
             </Routes>
         </BrowserRouter>
     )

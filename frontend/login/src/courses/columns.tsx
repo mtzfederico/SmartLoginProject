@@ -9,16 +9,24 @@ import {ArrowUpDown} from "lucide-react";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Course = {
-    id: string
+    id: number
     name: string
-    enrollment_term_id: string
+    enrollment_term_id: number
 }
 
-const termMap: Record<string, string> = {
-    "1": "Fall 2023",
-    "2": "Spring 2024",
-    "3": "Fall 2024",
-    "4": "Spring 2025",
+export type GetCoursesResponse = {
+    courses: Course[]
+    success: boolean
+    error: string | undefined
+}
+
+const termMap: Record<number, string> = {
+    142: "Spring 2024",
+    149: "Spring 2023",
+    157: "Spring 2025",
+    175: "Fall 2023",
+    176: "Fall 2022",
+    177: "Fall 2024",
 }
 
 export const columns: ColumnDef<Course>[] = [
@@ -71,8 +79,8 @@ export const columns: ColumnDef<Course>[] = [
             )
         },
         cell: ({ row }) => {
-            const termId = row.getValue("enrollment_term_id") as string
-            return termMap[termId] ?? `???`
+            const termID = row.getValue("enrollment_term_id") as number
+            return termMap[termID] ?? `Unknown (${termID})`
         }
     },
     {

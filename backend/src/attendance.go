@@ -10,6 +10,8 @@ import (
 )
 
 func handleSetAttendance(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
 	if c.Request.Body == nil {
 		c.JSON(400, gin.H{"success": false, "error": "No data received"})
 		return
@@ -23,7 +25,7 @@ func handleSetAttendance(c *gin.Context) {
 		return
 	}
 
-	log.WithFields(log.Fields{"cardID": request.CardID, "classID": request.ClassID}).Info("[handleSetAttendance] Received data")
+	log.WithFields(log.Fields{"cardID": request.CardID, "classID": request.CourseID}).Info("[handleSetAttendance] Received data")
 
 	userID, err := getUserIDFromCardID(c, request.CardID)
 	if err != nil {
@@ -39,7 +41,7 @@ func handleSetAttendance(c *gin.Context) {
 		return
 	}
 
-	err = addAttendanceToDB(c, userID, request.ClassID)
+	err = addAttendanceToDB(c, userID, request.CourseID)
 	if err != nil {
 		c.JSON(500, gin.H{"success": false, "error": "Internal Server Error (2), Please try again later"})
 		log.WithField("error", err).Error("[handleSetAttendance] Failed to add attendance to DB")
@@ -71,7 +73,7 @@ func getUserIDFromCardID(ctx context.Context, cardID string) (string, error) {
 	return "", nil
 }
 
-func addAttendanceToDB(ctx context.Context, studentID, classID string) error {
+func addAttendanceToDB(ctx context.Context, studentID string, classID int) error {
 	alertID, err := getNewID()
 	if err != nil {
 		return fmt.Errorf("failed to get a new ID. %w", err)

@@ -1,8 +1,8 @@
 package main
 
 type BasicRequest struct {
-	CardID  string `json:"cardID"`
-	ClassID string `json:"classID"`
+	CardID   string `json:"cardID"`
+	CourseID int    `json:"courseID"`
 }
 
 type User struct {

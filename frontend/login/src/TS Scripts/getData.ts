@@ -1,27 +1,30 @@
 // getData.ts
-import {Student} from "@/students/columns.tsx";
+import {GetStudentsResponse} from "@/students/columns.tsx";
 
-export async function getData(courseId: number) {
-    const token = import.meta.env.VITE_CANVAS_TOKEN; // Load your token
+export async function getData(courseID: number) {
+    const backend_url = import.meta.env.VITE_BACKEND_URL;
 
-    const url = encodeURIComponent('https://nyit.instructure.com/api/v1/courses/' + courseId + '/users?access_token=' + token + '&enrollment_type[]=student&per_page=100&include[]=avatar_url');
-
-    const res = await fetch(`https://api.allorigins.win/raw?url=${url}`, {
-        method: 'GET',
+    const res = await fetch(backend_url + '/getStudents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ "courseID": courseID }),
     });
 
+    const response: GetStudentsResponse = await res.json();
+    console.log(response);
+
     if (!res.ok) {
-        throw new Error("Failed to fetch students");
+        throw new Error(`Failed to fetch students. ${response.error || `unknown error. ${res.status}`}`);
     }
 
-    const users: Student[] = await res.json();
-    console.log(users);
+    return response.students
 
+    /*
     return users.map((user) => ({
         id: user.id,
         name: user.name,
         avatar_url: user.avatar_url,
-    }));
+    }));*/
 }
 
 

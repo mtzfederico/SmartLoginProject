@@ -14,6 +14,12 @@ export type Student = {
     avatar_url: string
 }
 
+export type GetStudentsResponse = {
+    students: Student[]
+    success: boolean
+    error: string | undefined
+}
+
 export const columns: ColumnDef<Student>[] = [
     {
         id: "select",

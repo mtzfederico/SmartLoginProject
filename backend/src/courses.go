@@ -12,6 +12,8 @@ import (
 )
 
 func handleGetCourses(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
 	courses, err := getCoursesInDB(c)
 	if err != nil {
 		c.JSON(500, gin.H{"success": false, "error": "Internal Server Error (0), Please try again later"})
@@ -30,6 +32,7 @@ func handleRefreshData(c *gin.Context) {
 		return
 	}
 
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	c.JSON(200, gin.H{"success": true})
 }
 

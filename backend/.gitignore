@@ -1,3 +1,4 @@
 config.yaml
 # filename prefix to ignore the file
 _ignore_*
+bin/

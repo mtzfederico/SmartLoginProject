@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	_ "embed"
 	"flag"
+	"fmt"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -86,14 +88,23 @@ func main() {
 		log.WithField("pingErr", pingErr).Fatal("[main] Failed to connect to DB")
 	}
 
+	erro := getDataFromCanva(context.Background())
+	if erro != nil {
+		fmt.Println(erro)
+	}
+	return
+
 	router := gin.Default()
 
 	// Handle 404s
 	router.NoRoute(func(c *gin.Context) {
-		c.JSON(404, gin.H{"message": "Page not found"})
+		c.JSON(404, gin.H{"error": "Page not found"})
 	})
 
+	router.GET("getCourses", handleGetCourses)
+	router.POST("getStudents", handleGetStudentsList)
 	router.POST("setAttendance", handleSetAttendance)
+	router.GET("refreshData", handleRefreshData)
 
 	router.Run(serverConfig.ListenOn)
 }

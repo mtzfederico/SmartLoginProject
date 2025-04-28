@@ -3,9 +3,11 @@ module smartLoginProject
 go 1.23.4
 
 require (
+	github.com/Jeffail/gabs v1.4.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-sql-driver/mysql v1.9.2
 	github.com/goccy/go-yaml v1.17.1
+	github.com/google/uuid v1.6.0
 	github.com/sirupsen/logrus v1.9.3
 )
 

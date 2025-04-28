@@ -100,9 +100,6 @@ func handleGetStudentsList(c *gin.Context) {
 		curl -X POST "localhost:9091/getStudents" -H 'Content-Type: application/json' -d '{"courseID": 31905}'
 	*/
 
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-	c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
-
 	if c.Request.Body == nil {
 		c.JSON(400, gin.H{"success": false, "error": "No data received"})
 		return
@@ -134,7 +131,7 @@ func getStudentsInClass(ctx context.Context, courseID int, getAll bool) ([]User,
 	var err error
 
 	if getAll {
-		rows, err = db.QueryContext(ctx, "SELECT users.id, users.name, users.pronouns, users.avatarURL FROM users INNER JOIN UsersInCourse ON users.id=UsersInCourse.studentID INNER JOIN idCard ON users.id=idCard.userID WHERE users.role='student' AND UsersInCourse.courseID=? AND NOT EXISTS (SELECT COUNT(*) FROM idCard WHERE idCard.userID=users.id);", courseID)
+		rows, err = db.QueryContext(ctx, "SELECT users.id, users.name, users.pronouns, users.avatarURL FROM users INNER JOIN UsersInCourse ON users.id=UsersInCourse.studentID WHERE users.role='student' AND UsersInCourse.courseID=?;", courseID)
 	} else {
 		rows, err = db.QueryContext(ctx, "SELECT users.id, users.name, users.pronouns, users.avatarURL FROM users INNER JOIN UsersInCourse ON users.id = UsersInCourse.studentID LEFT JOIN idCard ON users.id = idCard.userID WHERE users.role = 'student' AND UsersInCourse.courseID = ? AND idCard.userID IS NULL;", courseID)
 	}

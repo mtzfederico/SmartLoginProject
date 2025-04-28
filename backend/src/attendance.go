@@ -55,10 +55,8 @@ func handleSetAttendance(c *gin.Context) {
 
 func handleGetAttendance(c *gin.Context) {
 	/*
-		curl -X POST "localhost:9091/getAttendance" -H 'Content-Type: application/json' -d '{"courseID": 31905, "startDate": "2012-12-25 00:00:00", "endDate": "2012-12-25 23:59:59"}'
+		curl -X POST "localhost:9091/getAttendance" -H 'Content-Type: application/json' -d '{"courseID": 31905, "startDate": "2025-04-28 00:00:00", "endDate": "2025-04-28 23:59:59"}'
 	*/
-
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if c.Request.Body == nil {
 		c.JSON(400, gin.H{"success": false, "error": "No data received"})

@@ -5,6 +5,8 @@ import { getSelf } from "@/TS Scripts/getSelf.ts"
 import '@/Page.css'
 import {useEffect, useState} from "react";
 
+import appIcon from "@/assets/ScanMo.png";
+
 export default function Page() {
     const navigate = useNavigate()
     const [userName, setUserName] = useState<string>("");
@@ -24,12 +26,18 @@ export default function Page() {
 
     return (
         <div className="body">
-            <main className="flex logoSplasH">
-                <h1 className="logoSplash">Helo</h1>
-                <h1 className="text-4xl font-bold">Landing</h1>
-                <h1 className="text-4xl font-bold">Page!!</h1>
+            <main className="flex logoSplash">
+                <img src={appIcon} style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "35%"
+                }} alt="ScanMo Logo"/>
                 <p className="text-lg text-gray-500">Connected to Canvas as {userName ? userName : "Loading..."}</p>
-                <Button className={"button button-large"} onClick={() => navigate("/course-selection")}>View Courses</Button>
+                <Button className="big-button logoSplash" onClick={() => navigate("/course-selection")}>
+                    <div className="icon">🔔</div>
+                    <div className="divider"></div>
+                    <div className="subtitle">View Courses</div>
+                </Button>
             </main>
         </div>
     )

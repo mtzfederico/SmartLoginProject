@@ -43,6 +43,18 @@ p {
   color: white;
 }
 
+.vertical-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+}
+
+.button-row {
+  display: flex;
+  gap: 20px; /* space between buttons */
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -54,19 +66,57 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+.button-large {
+
+  padding: 1rem 2rem;
+  font-size: 1.25rem;
+
+}
+.button-xlarge {
+  padding: 10rem 10rem;
+}
+
+.big-button {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 350px;
+  height: 350px;
+  background-color: #1a1a1a;
+  color: white;
+  border-radius: 16px;
+  cursor: pointer;
+  position: relative;
+
+  border: 1px solid transparent;
+  font-weight: 500;
+  font-family: inherit;
+  transition: border-color 0.25s;
+}
+
+.icon {
+  font-size: 64px; /* make the icon big */
+  margin: 1.2em;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background-color: white;
+}
+
+.subtitle {
+  font-size: 32px;
+  opacity: 0.8;
+  margin: 0.8em;
+}
+
 button:hover {
   border-color: #ffffff;
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-.button-large {
-
-  padding: 1rem 2rem;
-  font-size: 1.25rem;
-
 }
 
 @media (prefers-color-scheme: light) {

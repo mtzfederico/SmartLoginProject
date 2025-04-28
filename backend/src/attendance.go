@@ -39,7 +39,7 @@ func handleSetAttendance(c *gin.Context) {
 	if userID <= 1 {
 		// card not found in db
 		c.JSON(400, gin.H{"success": false, "error": "Card is not registred"})
-		log.Trace("[handleSetAttendance] Card is not registred")
+		log.WithField("userID", userID).Trace("[handleSetAttendance] Card is not registred")
 		return
 	}
 
@@ -99,6 +99,7 @@ func getUserIDFromCardID(ctx context.Context, cardID string) (int, error) {
 		if userID <= 1 {
 			return userID, nil
 		}
+		return userID, nil
 	} else {
 		err = rows.Err()
 		if err != nil {

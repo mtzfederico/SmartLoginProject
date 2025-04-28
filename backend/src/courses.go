@@ -73,7 +73,7 @@ func getDataFromCanvas(ctx context.Context) error {
 
 	if resp.StatusCode != http.StatusOK {
 		fmt.Println("Request failed with status code:", resp.StatusCode)
-		os.Exit(1)
+		return fmt.Errorf("failed to get data from canvs api. Status: %d", resp.StatusCode)
 	}
 
 	var response getCoursesResponse

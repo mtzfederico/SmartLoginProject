@@ -58,11 +58,15 @@ CREATE TABLE IF NOT EXISTS idCard (
   id       VARCHAR(50)   PRIMARY KEY,
   userID   INTEGER       NOT NULL,
   date     DATETIME      NOT NULL,
+  UNIQUE (userID),
   CONSTRAINT idCard_userID_fk FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE
 );
 select * from courses order by semesterID asc;
 
 select * from users;
 SELECT * FROM idCard;
-SELECT users.id, users.name, users.pronouns, users.avatarURL FROM users INNER JOIN UsersInCourse ON users.id=UsersInCourse.studentID INNER JOIN idCard ON users.id=idCard.userID WHERE users.role='student' AND UsersInCourse.courseID=31631 AND NOT EXISTS (SELECT id FROM idCard WHERE idCard.userID=users.id);
+SELECT users.id, users.name, users.pronouns, users.avatarURL FROM users INNER JOIN UsersInCourse ON users.id=UsersInCourse.studentID INNER JOIN idCard ON users.id=idCard.userID WHERE users.role='student' AND UsersInCourse.courseID=31631 AND EXISTS (SELECT NULL FROM idCard WHERE idCard.userID=users.id);
 
+SELECT users.id, users.name, users.pronouns, users.avatarURL FROM users INNER JOIN UsersInCourse ON users.id = UsersInCourse.studentID LEFT JOIN idCard ON users.id = idCard.userID WHERE users.role = 'student' AND UsersInCourse.courseID = 31905 AND idCard.userID IS NULL;
+
+SELECT users.id, users.name, users.pronouns, users.avatarURL FROM users INNER JOIN attendance ON users.id=attendance.studentID WHERE users.role='student' AND attendance.courseID=? AND attendance.date BETWEEN '2012-12-25 00:00:00' AND '2012-12-25 23:59:59';

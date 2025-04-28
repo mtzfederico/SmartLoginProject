@@ -102,6 +102,7 @@ func main() {
 	router.GET("getCourses", handleGetCourses)
 	router.POST("getStudents", handleGetStudentsList)
 	router.POST("getStudentsWithNoID", handleGetStudentsWithNoID)
+	router.POST("registerIDCard", handleRegisterIDCard)
 	router.POST("setAttendance", handleSetAttendance)
 	router.POST("getAttendance", handleGetAttendance)
 	router.GET("refreshData", handleRefreshData)

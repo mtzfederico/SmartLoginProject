@@ -34,7 +34,7 @@ func handleSetAttendance(c *gin.Context) {
 		return
 	}
 
-	if userID == "" {
+	if userID <= 1 {
 		// card not found in db
 		c.JSON(400, gin.H{"success": false, "error": "Card is not registred"})
 		log.Trace("[handleSetAttendance] Card is not registred")
@@ -64,7 +64,7 @@ func handleGetAttendance(c *gin.Context) {
 	}
 
 	// only the classID is used here
-	var request getAttendanceRequest
+	var request GetAttendanceRequest
 	err := c.BindJSON(&request)
 	if err != nil {
 		c.JSON(500, gin.H{"success": false, "error": "Internal Server Error (0), Please try again later"})
@@ -85,28 +85,28 @@ func handleGetAttendance(c *gin.Context) {
 }
 
 // checks if the id card is registered to a user and returns the userID if it does exist. If it doesn't exist, it returns an empty string and no error
-func getUserIDFromCardID(ctx context.Context, cardID string) (string, error) {
+func getUserIDFromCardID(ctx context.Context, cardID string) (int, error) {
 	rows, err := db.QueryContext(ctx, "SELECT userID FROM idCard WHERE id=?;", cardID)
 	if err != nil {
-		return "", fmt.Errorf("error querying DB. %w", err)
+		return -1, fmt.Errorf("error querying DB. %w", err)
 	}
 
 	if rows.Next() {
-		var userID string
+		var userID int
 		rows.Scan(&userID)
-		if userID != "" {
+		if userID <= 1 {
 			return userID, nil
 		}
 	} else {
 		err = rows.Err()
 		if err != nil {
-			return "", fmt.Errorf("error getting rows. %w", err)
+			return -1, fmt.Errorf("error getting rows. %w", err)
 		}
 	}
-	return "", nil
+	return -1, nil
 }
 
-func addAttendanceToDB(ctx context.Context, studentID string, courseID int) error {
+func addAttendanceToDB(ctx context.Context, studentID int, courseID int) error {
 	alertID, err := getNewID()
 	if err != nil {
 		return fmt.Errorf("failed to get a new ID. %w", err)

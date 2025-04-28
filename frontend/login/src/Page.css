@@ -94,6 +94,7 @@ tr[data-state="selected"] {
 }
 
 .logoSplash{
+    display: flex;
     text-align: center;
     justify-items: center;
     align-items: center;

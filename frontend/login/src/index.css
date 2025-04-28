@@ -37,8 +37,20 @@ h1 {
   color: white;
 }
 
+.small-h1 {
+  font-size: 2.8em;
+  line-height: 1.1;
+  color: white;
+}
+
 p {
   font-size: 2.2em;
+  line-height: 1.1;
+  color: white;
+}
+
+.ps {
+  font-size: 1.4em;
   line-height: 1.1;
   color: white;
 }
@@ -52,7 +64,7 @@ p {
 
 .button-row {
   display: flex;
-  gap: 20px; /* space between buttons */
+  gap: 60px; /* space between buttons */
 }
 
 button {
@@ -66,22 +78,14 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-.button-large {
-
-  padding: 1rem 2rem;
-  font-size: 1.25rem;
-
-}
-.button-xlarge {
-  padding: 10rem 10rem;
-}
 
 .big-button {
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 350px;
-  height: 350px;
+  width: 400px;
+  height: 400px;
   background-color: #1a1a1a;
   color: white;
   border-radius: 16px;
@@ -96,7 +100,7 @@ button {
 
 .icon {
   font-size: 64px; /* make the icon big */
-  margin: 1.2em;
+  margin: 1.5em;
 }
 
 .divider {
@@ -107,7 +111,6 @@ button {
 
 .subtitle {
   font-size: 32px;
-  opacity: 0.8;
   margin: 0.8em;
 }
 
@@ -118,6 +121,25 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center; /* optional: center the text */
+  margin-bottom: 1em;
+}
+
+.fixed-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center; /* optional: center the text */
+  background: #1a1a1a;
+}
+
 
 @media (prefers-color-scheme: light) {
   :root {

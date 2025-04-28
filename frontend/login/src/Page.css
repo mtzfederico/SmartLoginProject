@@ -1,0 +1,100 @@
+/* General Table Styling */
+
+
+.table-container {
+    display: flex;
+    justify-content: center;  /* horizontally center the content */
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+}
+
+table {
+    border-spacing: 0; /* Optional, controls space between cells */
+    border-radius: 12px; /* Rounded corners */
+    overflow: hidden; /* Ensures rounded corners are clipped */
+
+    width: 900px; /* or a fixed width if you'd like */
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ... keep the rest of the styles from before */
+
+
+/* Table Header Styling */
+th {
+    padding: 12px;
+    text-align: left;
+    background-color: #171717; /* Color background for header */
+    color: white;
+    font-weight: bold;
+}
+
+/* Table Cell Styling */
+td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #3c4246;
+    border-top: 1px solid #3c4246;
+    color: #ffffff;
+}
+
+tr {
+    background-color: #292929; /* Slightly off-white background for rows */
+}
+
+/* Hover Effect for Rows */
+tr:hover {
+    background-color: #333333; /* or any color you want on hover */
+    transition: background-color 0.2s ease;
+}
+
+tr[data-state="selected"] {
+    background-color: #4e4e4e !important; /* Example: Indigo-500 */
+    color: white;
+}
+
+.sButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.inputSearch{
+    max-width: 28rem;
+    width: 70%;
+    height: 3rem;
+    padding: 0 1rem;
+    border-radius: 9999px;
+    border: 1px solid #171717;
+    background-color: #171717;
+    color: white;
+    font-size: 1rem;
+}
+
+.submitButton{
+    max-width: 28rem;
+    width: 15%;
+    height: 3rem;
+    padding: 0 1rem;
+    border-radius: 9999px;
+    border: 1px solid #171717;
+    background-color: #171717;
+    color: white;
+    font-size: 1rem;
+}
+
+.topButtons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.5rem 0;
+    gap: 1rem;
+}
+
+.logoSplasH{
+    text-align: center;
+    justify-items: center;
+    align-items: center;
+}

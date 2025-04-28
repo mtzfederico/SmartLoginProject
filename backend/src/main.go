@@ -99,6 +99,8 @@ func main() {
 		c.JSON(404, gin.H{"error": "Page not found"})
 	})
 
+	router.Use(CORSMiddleware())
+
 	router.GET("getCourses", handleGetCourses)
 	router.POST("getStudents", handleGetStudentsList)
 	router.POST("getStudentsWithNoID", handleGetStudentsWithNoID)
@@ -107,8 +109,6 @@ func main() {
 	router.POST("getAttendance", handleGetAttendance)
 	router.GET("refreshData", handleRefreshData)
 
-	// router.Use(cors.Default())
-	router.Use(CORSMiddleware())
 	router.Run(serverConfig.ListenOn)
 }
 

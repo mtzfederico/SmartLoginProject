@@ -10,7 +10,9 @@ import (
 )
 
 func handleSetAttendance(c *gin.Context) {
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	/*
+		curl -X POST "localhost:9091/setAttendance" -H 'Content-Type: application/json' -d '{"cardID": "6363530000196087", "courseID": 31905}'
+	*/
 
 	if c.Request.Body == nil {
 		c.JSON(400, gin.H{"success": false, "error": "No data received"})
@@ -111,7 +113,7 @@ func addAttendanceToDB(ctx context.Context, studentID int, courseID int) error {
 	if err != nil {
 		return fmt.Errorf("failed to get a new ID. %w", err)
 	}
-	_, err = db.ExecContext(ctx, "INSERT INTO attendance (id, studentID, classID, date) VALUES (?, ?, ?, now());", alertID, studentID, courseID)
+	_, err = db.ExecContext(ctx, "INSERT INTO attendance (id, studentID, courseID, date) VALUES (?, ?, ?, now());", alertID, studentID, courseID)
 	return fmt.Errorf("faied to insert record into DB. %w", err)
 }
 

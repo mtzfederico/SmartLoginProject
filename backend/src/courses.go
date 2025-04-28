@@ -12,7 +12,9 @@ import (
 )
 
 func handleGetCourses(c *gin.Context) {
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	/*
+		curl "localhost:9091/getCourses"
+	*/
 
 	courses, err := getCoursesInDB(c)
 	if err != nil {
@@ -25,6 +27,9 @@ func handleGetCourses(c *gin.Context) {
 }
 
 func handleRefreshData(c *gin.Context) {
+	/*
+		curl "localhost:9091/refreshData"
+	*/
 	err := getDataFromCanvas(c)
 	if err != nil {
 		c.JSON(500, gin.H{"success": false, "error": "Internal Server Error (0), Please try again later"})
@@ -32,7 +37,6 @@ func handleRefreshData(c *gin.Context) {
 		return
 	}
 
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	c.JSON(200, gin.H{"success": true})
 }
 

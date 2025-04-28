@@ -60,5 +60,3 @@ CREATE TABLE IF NOT EXISTS idCard (
   date     DATETIME      NOT NULL,
   CONSTRAINT idCard_userID_fk FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE
 );
-
-select * from UsersInCourse WHERE DATE_SUB(lastUpdated, INTERVAL 5 MINUTE);

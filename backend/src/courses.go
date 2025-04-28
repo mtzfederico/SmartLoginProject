@@ -23,7 +23,7 @@ func handleGetCourses(c *gin.Context) {
 }
 
 func handleRefreshData(c *gin.Context) {
-	err := getDataFromCanva(c)
+	err := getDataFromCanvas(c)
 	if err != nil {
 		c.JSON(500, gin.H{"success": false, "error": "Internal Server Error (0), Please try again later"})
 		log.WithField("error", err).Error("[handleRefreshData] Failed to get data from canvas")
@@ -58,7 +58,7 @@ func getCoursesInDB(ctx context.Context) ([]Course, error) {
 }
 
 // gets the courses from canvas and all of the students in those classes and stores them in the db
-func getDataFromCanva(ctx context.Context) error {
+func getDataFromCanvas(ctx context.Context) error {
 	url := fmt.Sprintf("https://nyit.instructure.com/api/v1/courses/?access_token=%s&per_page=100", serverConfig.CanvasAPIToken)
 
 	resp, err := http.Get(url)
@@ -80,13 +80,14 @@ func getDataFromCanva(ctx context.Context) error {
 		return fmt.Errorf("failed to decode JSON. %w", err)
 	}
 
+	log.WithField("count", len(response)).Info("[getDataFromCanvas] Got courses")
 	for _, course := range response {
 		fmt.Printf("Adding course: %v\n", course)
 		err = addCourse(ctx, course)
 		if err != nil {
 			return fmt.Errorf("failed to add course '%d'. %w", course.ID, err)
 		}
-		err = getStudentsInCourseFromCanva(ctx, course.ID)
+		err = getStudentsInCourseFromCanvas(ctx, course.ID)
 		if err != nil {
 			return fmt.Errorf("failed to get students in course '%d'. %w", course.ID, err)
 		}
@@ -101,7 +102,7 @@ func getDataFromCanva(ctx context.Context) error {
 	return nil
 }
 
-func getStudentsInCourseFromCanva(ctx context.Context, courseID int) error {
+func getStudentsInCourseFromCanvas(ctx context.Context, courseID int) error {
 	url := fmt.Sprintf("https://nyit.instructure.com/api/v1/courses/%d/users?access_token=%s&enrollment_type[]=student&per_page=100&include[]=avatar_url", courseID, serverConfig.CanvasAPIToken)
 
 	resp, err := http.Get(url)
@@ -156,7 +157,7 @@ func addStudent(ctx context.Context, student User, courseID int) error {
 		return fmt.Errorf("failed to get a new ID. %w", err)
 	}
 
-	_, err = db.ExecContext(ctx, "INSERT INTO UsersInCourse (id, courseID, studentID, status, lastUpdated) VALUES (?, ?, ?, 'enrolled', now()) ON DUPLICATE KEY UPDATE lastUpdated=now();", relationID, courseID, student.ID)
+	_, err = db.ExecContext(ctx, "INSERT INTO UsersInCourse (id, courseID, studentID, status, lastUpdated) VALUES (?, ?, ?, 'enrolled', now()) ON DUPLICATE KEY UPDATE status='enrolled', lastUpdated=now();", relationID, courseID, student.ID)
 	if err != nil {
 		return fmt.Errorf("failed to add student to UsersInCourse table. %w", err)
 	}
@@ -165,8 +166,16 @@ func addStudent(ctx context.Context, student User, courseID int) error {
 }
 
 func markOldStudentsAsDropped(ctx context.Context) error {
-	_, err := db.ExecContext(ctx, "UPDATE UsersInCourse SET status='dropped' WHERE DATE_SUB(lastUpdated, INTERVAL 5 MINUTE);")
-	return err
+	res, err := db.ExecContext(ctx, "UPDATE UsersInCourse SET status='dropped' WHERE status='enrolled' AND lastUpdated <= DATE_SUB(now(), INTERVAL 30 MINUTE);")
+	if err != nil {
+		return fmt.Errorf("failed to update rows rows. %w", err)
+	}
+	n, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to check rows affected. %w", err)
+	}
+	log.WithField("rowsAffected", n).Info("[markOldStudentsAsDropped] done")
+	return nil
 }
 
 /*

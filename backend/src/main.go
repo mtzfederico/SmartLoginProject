@@ -1,11 +1,9 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	_ "embed"
 	"flag"
-	"fmt"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -88,11 +86,11 @@ func main() {
 		log.WithField("pingErr", pingErr).Fatal("[main] Failed to connect to DB")
 	}
 
-	erro := getDataFromCanva(context.Background())
-	if erro != nil {
-		fmt.Println(erro)
-	}
-	return
+	// erro := getDataFromCanva(context.Background())
+	// if erro != nil {
+	// 	fmt.Println(erro)
+	// }
+	// return
 
 	router := gin.Default()
 

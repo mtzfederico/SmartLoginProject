@@ -114,7 +114,10 @@ func addAttendanceToDB(ctx context.Context, studentID int, courseID int) error {
 		return fmt.Errorf("failed to get a new ID. %w", err)
 	}
 	_, err = db.ExecContext(ctx, "INSERT INTO attendance (id, studentID, courseID, date) VALUES (?, ?, ?, now());", alertID, studentID, courseID)
-	return fmt.Errorf("faied to insert record into DB. %w", err)
+	if err != nil {
+		return fmt.Errorf("faied to insert record into DB. %w", err)
+	}
+	return nil
 }
 
 func getAttendanceForClass(ctx context.Context, courseID int, startDate, endDate string) ([]UserAttendance, error) {

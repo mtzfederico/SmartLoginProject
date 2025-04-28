@@ -101,8 +101,29 @@ func main() {
 
 	router.GET("getCourses", handleGetCourses)
 	router.POST("getStudents", handleGetStudentsList)
+	router.POST("getStudentsWithNoID", handleGetStudentsWithNoID)
 	router.POST("setAttendance", handleSetAttendance)
+	router.POST("getAttendance", handleGetAttendance)
 	router.GET("refreshData", handleRefreshData)
 
+	// router.Use(cors.Default())
+	router.Use(CORSMiddleware())
 	router.Run(serverConfig.ListenOn)
+}
+
+func CORSMiddleware() gin.HandlerFunc {
+	// https://stackoverflow.com/questions/29418478/go-gin-framework-cors
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
 }

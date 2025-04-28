@@ -51,6 +51,39 @@ func handleSetAttendance(c *gin.Context) {
 	c.JSON(200, gin.H{"success": true})
 }
 
+func handleGetAttendance(c *gin.Context) {
+	/*
+		curl -X POST "localhost:9091/getAttendance" -H 'Content-Type: application/json' -d '{"courseID": 31905, "startDate": "2012-12-25 00:00:00", "endDate": "2012-12-25 23:59:59"}'
+	*/
+
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
+	if c.Request.Body == nil {
+		c.JSON(400, gin.H{"success": false, "error": "No data received"})
+		return
+	}
+
+	// only the classID is used here
+	var request getAttendanceRequest
+	err := c.BindJSON(&request)
+	if err != nil {
+		c.JSON(500, gin.H{"success": false, "error": "Internal Server Error (0), Please try again later"})
+		log.WithField("error", err).Error("[handleGetAttendance] Failed to decode JSON")
+		return
+	}
+
+	log.WithFields(log.Fields{"courseID": request.CourseID}).Info("[handleGetAttendance] Received data")
+
+	users, err := getAttendanceForClass(c, request.CourseID, request.StartDate, request.EndDate)
+	if err != nil {
+		c.JSON(500, gin.H{"success": false, "error": "Internal Server Error (0), Please try again later"})
+		log.WithField("error", err).Error("[handleGetAttendance] Failed to get classes from DB")
+		return
+	}
+
+	c.JSON(200, gin.H{"success": true, "students": users})
+}
+
 // checks if the id card is registered to a user and returns the userID if it does exist. If it doesn't exist, it returns an empty string and no error
 func getUserIDFromCardID(ctx context.Context, cardID string) (string, error) {
 	rows, err := db.QueryContext(ctx, "SELECT userID FROM idCard WHERE id=?;", cardID)
@@ -73,13 +106,37 @@ func getUserIDFromCardID(ctx context.Context, cardID string) (string, error) {
 	return "", nil
 }
 
-func addAttendanceToDB(ctx context.Context, studentID string, classID int) error {
+func addAttendanceToDB(ctx context.Context, studentID string, courseID int) error {
 	alertID, err := getNewID()
 	if err != nil {
 		return fmt.Errorf("failed to get a new ID. %w", err)
 	}
-	_, err = db.ExecContext(ctx, "INSERT INTO attendance (id, studentID, classID, date) VALUES (?, ?, ?, now());", alertID, studentID, classID)
+	_, err = db.ExecContext(ctx, "INSERT INTO attendance (id, studentID, classID, date) VALUES (?, ?, ?, now());", alertID, studentID, courseID)
 	return fmt.Errorf("faied to insert record into DB. %w", err)
+}
+
+func getAttendanceForClass(ctx context.Context, courseID int, startDate, endDate string) ([]UserAttendance, error) {
+	rows, err := db.QueryContext(ctx, "SELECT users.id, users.name, users.pronouns, users.avatarURL, attendance.date FROM users INNER JOIN attendance ON users.id=attendance.studentID WHERE users.role='student' AND attendance.courseID=? AND attendance.date BETWEEN ? AND ?;", courseID, startDate, endDate)
+	if err != nil {
+		return nil, fmt.Errorf("error querying DB. %w", err)
+	}
+
+	var users []UserAttendance = []UserAttendance{}
+
+	for rows.Next() {
+		var userAttendance UserAttendance
+		rows.Scan(&userAttendance.ID, &userAttendance.Name, &userAttendance.Pronouns, &userAttendance.AvatarURL, &userAttendance.Date)
+		users = append(users, userAttendance)
+	}
+
+	if len(users) == 0 {
+		err := rows.Err()
+		if err != nil {
+			return nil, fmt.Errorf("error getting rows. %w", err)
+		}
+	}
+
+	return users, nil
 }
 
 // Returns a new v7 UUID.

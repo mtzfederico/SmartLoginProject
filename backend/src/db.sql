@@ -60,3 +60,9 @@ CREATE TABLE IF NOT EXISTS idCard (
   date     DATETIME      NOT NULL,
   CONSTRAINT idCard_userID_fk FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE
 );
+select * from courses order by semesterID asc;
+
+select * from users;
+SELECT * FROM idCard;
+SELECT users.id, users.name, users.pronouns, users.avatarURL FROM users INNER JOIN UsersInCourse ON users.id=UsersInCourse.studentID INNER JOIN idCard ON users.id=idCard.userID WHERE users.role='student' AND UsersInCourse.courseID=31631 AND NOT EXISTS (SELECT id FROM idCard WHERE idCard.userID=users.id);
+

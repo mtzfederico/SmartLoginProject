@@ -67,6 +67,14 @@ tr[data-state="selected"] {
     transition: background-color 0.2s ease;
 }
 
+.invisible-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
 
 /* Undo or customize table styling specifically for the calendar */
 .calendar-wrapper table {

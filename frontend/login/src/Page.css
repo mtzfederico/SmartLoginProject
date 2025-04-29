@@ -58,6 +58,16 @@ tr[data-state="selected"] {
     color: white;
 }
 
+.invalid-row {
+    background-color: #422424;
+}
+
+.invalid-row:hover {
+    background-color: #492D2D;
+    transition: background-color 0.2s ease;
+}
+
+
 /* Undo or customize table styling specifically for the calendar */
 .calendar-wrapper table {
     all: unset; /* Resets all inherited styles from global table rules */

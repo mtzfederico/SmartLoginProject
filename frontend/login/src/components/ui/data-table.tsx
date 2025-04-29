@@ -59,14 +59,12 @@ export function DataTable<TData, TValue>({
     })
 
     const handleSubmit = async (row: Row<RowData>) => {
-        // You can now access cardID here and use it in the API call
         try {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
             const studentID = parseInt(row.original.id);
             const courseID = selectedCourse.id;
 
-            // Assuming you're marking attendance with the cardID
             await registerIDCard({
                 studentID: studentID,
                 courseID: courseID,

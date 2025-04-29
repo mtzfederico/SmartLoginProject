@@ -53,6 +53,7 @@ export const attendanceColumns: ColumnDef<AttendanceData>[] = [
             const rawDate = row.getValue("date") as string;
 
             if (rawDate === "--:--.--") {
+                row._valuesCache.__invalid = true;
                 return <span>{rawDate}</span>;
             }
 

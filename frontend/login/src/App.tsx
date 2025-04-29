@@ -5,6 +5,7 @@ import SelectionPage from './selectionPageDir/selectionPage.tsx'
 import CoursePage from './courseSelectionPageDir/courseSelectionPage.tsx'
 import CourseHome from './courseSelectionPageDir/courseHome.tsx'
 import CourseRecords from './courseSelectionPageDir/courseRecords.tsx'
+import CourseRedirect from './courseSelectionPageDir/courseRedirect.tsx'
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                 <Route path="/course-selection" element={<CoursePage />} />
                 <Route path="/course-home" element={<CourseHome />} />
                 <Route path="/course-records" element={<CourseRecords />} />
+                <Route path="/redirect" element={<CourseRedirect />} />
             </Routes>
         </BrowserRouter>
     )

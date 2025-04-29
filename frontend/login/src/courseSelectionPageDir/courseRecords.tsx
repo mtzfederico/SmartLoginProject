@@ -66,6 +66,43 @@ export default function RecordsPage() {
         fetchAttendance();
     }, [courseID, selectedDate]);
 
+    function getShortClassName(): string {
+        const nameSplit = courseName.split(' - ');
+        const len = nameSplit.length;
+        if (len >= 2) {
+            return nameSplit[2];
+        } else if (len === 1) {
+            return nameSplit[1];
+        }
+        return courseName;
+    }
+
+    function exportCSVPressed() {
+        if (!attendance || !selectedDate) {
+            console.log("[exportCSVPressed] attendance or selectedDate undefined")
+            return
+        }
+
+        const shortName = getShortClassName();
+
+        const yyyy = selectedDate.getFullYear();
+        const mm = String(selectedDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(selectedDate.getDate()).padStart(2, '0');
+
+        // https://stackoverflow.com/questions/44656610/download-a-string-as-txt-file-in-react
+        var csvData = `# ${shortName} ${yyyy}-${mm}-${dd}\nName,Arrival Time,\n`
+        attendance.forEach(function(value, _) {
+			csvData += value.name + "," + (value.date === "--:--.--" ? "---" : value.date) + ",\n";
+        })
+
+        const element = document.createElement("a");
+        const file = new Blob([csvData], {type: 'text/csv'});
+        element.href = URL.createObjectURL(file);
+        element.download = `attendance_${shortName.replace(' ', '_')}_${yyyy}-${mm}-${dd}.csv`;
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
+    }
+
 
     if (loading) return <div className="p-10 text-white">Loading attendance...</div>
 
@@ -98,6 +135,9 @@ export default function RecordsPage() {
                         />
                     </PopoverContent>
                 </Popover>
+                <button className={cn( "w-[280px] justify-start text-left font-normal", "text-muted-foreground")} onClick={exportCSVPressed}>
+                    <span>Export to csv</span>
+                </button>
             </div>
             <div className="table-container"
                  style={{

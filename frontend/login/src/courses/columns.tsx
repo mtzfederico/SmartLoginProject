@@ -21,12 +21,12 @@ export type GetCoursesResponse = {
 }
 
 const termMap: Record<number, string> = {
-    142: "Spring 2024",
-    149: "Spring 2023",
-    157: "Spring 2025",
-    175: "Fall 2023",
-    176: "Fall 2022",
-    177: "Fall 2024",
+    1: "Fall 2022",
+    2: "Spring 2023",
+    3: "Fall 2023",
+    4: "Spring 2024",
+    5: "Fall 2024",
+    6: "Spring 2025",
 }
 
 export const columns: ColumnDef<Course>[] = [

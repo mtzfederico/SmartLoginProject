@@ -92,7 +92,7 @@ export const columns: ColumnDef<Student>[] = [
     },
     {
         accessorKey: "id",
-        header: "ID Test",
+        header: "Canvas ID",
     },
 ]
 

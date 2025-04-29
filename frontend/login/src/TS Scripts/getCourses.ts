@@ -1,5 +1,15 @@
-// getData.ts
+// getStudents.ts
 import {GetCoursesResponse} from "@/courses/columns.tsx";
+
+const termMap: Record<number, number> = {
+    1: 0,
+    176: 1,
+    149: 2,
+    175: 3,
+    142: 4,
+    177: 5,
+    157: 6,
+}
 
 export async function getCourses() {
     const backend_url = import.meta.env.VITE_BACKEND_URL;
@@ -15,14 +25,13 @@ export async function getCourses() {
         throw new Error(`Failed to fetch courses. ${response.error || `unknown error. ${res.status}`}`);
     }
 
-    return response.courses
+    // return response.courses
 
-    /*
-    return courses.map((course) => ({
+    return response.courses.map((course) => ({
         id: course.id,
         name: course.name,
-        enrollment_term_id: course.enrollment_term_id,
-    }));*/
+        enrollment_term_id: termMap[course.enrollment_term_id],
+    }));
 }
 
 

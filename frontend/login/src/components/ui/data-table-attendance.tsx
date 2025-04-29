@@ -3,7 +3,7 @@
 import {
     ColumnDef, ColumnFiltersState,
     flexRender,
-    getCoreRowModel, getFilteredRowModel, getSortedRowModel, Row, RowData, SortingState,
+    getCoreRowModel, getFilteredRowModel, getSortedRowModel, SortingState,
     useReactTable, VisibilityState,
 } from "@tanstack/react-table"
 
@@ -15,31 +15,22 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table.tsx"
-import {Course} from "@/courses/columns.tsx";
-
 import * as React from "react";
-import {Input} from "@/components/ui/input.tsx";
-import {Button} from "@/components/ui/button.tsx";
-import {registerIDCard} from "@/TS Scripts/registerID.ts"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
-    cardID: string;
-    selectedCourse: Course
 }
 
 export function DataTable<TData, TValue>({
                                              columns,
                                              data,
-                                             cardID,
-                                             selectedCourse,
                                          }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
     )
-        React.useState<VisibilityState>({})
+    React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
 
     const table = useReactTable({
@@ -58,54 +49,8 @@ export function DataTable<TData, TValue>({
         },
     })
 
-    const handleSubmit = async (row: Row<RowData>) => {
-        // You can now access cardID here and use it in the API call
-        try {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            const studentID = parseInt(row.original.id);
-            const courseID = selectedCourse.id;
-
-            // Assuming you're marking attendance with the cardID
-            await registerIDCard({
-                studentID: studentID,
-                courseID: courseID,
-                cardID: cardID
-            })
-
-            console.log(`Card registered for card ID: ${cardID} inside ${selectedCourse.name} for ${studentID}` );
-            history.back();
-        } catch (error) {
-            console.error("Error marking attendance:", error);
-        }
-    };
-
     return (
         <div>
-
-            <div className={"topButtons"}>
-                <Input
-                    placeholder="Filter names..."
-                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) => {
-                        table.resetRowSelection(); // Deselect all rows
-                        table.getColumn("name")?.setFilterValue(event.target.value); // Apply filter
-                    }}
-                    className="inputSearch"
-                />
-                <Button
-                    className="submitButton"
-                    onClick={() => {
-                        const selectedRow = table.getSelectedRowModel().rows[0];
-                        if (selectedRow) {
-                            void handleSubmit(selectedRow); // <- use `void` to suppress the Promise
-                        }
-                    }}
-                >
-                    Submit
-                </Button>
-            </div>
-
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>

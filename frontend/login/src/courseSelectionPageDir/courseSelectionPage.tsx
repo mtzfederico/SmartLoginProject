@@ -14,7 +14,7 @@ export default function SelectionPage() {
             .then((courses) => {
                 // Sort courses by a specific field, e.g., "name" in ascending order
                 const sortedCourses = courses.sort((a, b) =>
-                    parseInt(b.enrollment_term_id) - parseInt(a.enrollment_term_id)
+                    b.enrollment_term_id - a.enrollment_term_id
                 );
 
                 setData(sortedCourses);

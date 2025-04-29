@@ -3,7 +3,7 @@ type Account = {
 }
 
 export async function getSelf() {
-    const token = import.meta.env.VITE_CANVAS_TOKEN; // Load your token
+    const token = localStorage.getItem('user_token')
 
     const url = encodeURIComponent('https://nyit.instructure.com/api/v1/users/self/profile?access_token=' + token + '&per_page=100');
 

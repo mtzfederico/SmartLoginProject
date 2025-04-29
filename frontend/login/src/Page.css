@@ -2,18 +2,22 @@
 
 
 .table-container {
-    display: flex;
+    min-width: 950px;
+    max-width: 90%;
     justify-content: center;  /* horizontally center the content */
     margin-top: 4rem;
     margin-bottom: 4rem;
+    padding-left: 2em;
+    padding-right: 2em;
 }
+
 
 table {
     border-spacing: 0; /* Optional, controls space between cells */
     border-radius: 12px; /* Rounded corners */
     overflow: hidden; /* Ensures rounded corners are clipped */
 
-    width: 900px; /* or a fixed width if you'd like */
+    width: 100%; /* or a fixed width if you'd like */
     border-collapse: collapse;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -53,6 +57,32 @@ tr[data-state="selected"] {
     background-color: #4e4e4e !important; /* Example: Indigo-500 */
     color: white;
 }
+
+/* Undo or customize table styling specifically for the calendar */
+.calendar-wrapper table {
+    all: unset; /* Resets all inherited styles from global table rules */
+    display: table;
+    width: auto;
+    border-collapse: separate;
+    border-spacing: 0.25rem;
+    background: #171717;
+}
+
+.calendar-wrapper th,
+.calendar-wrapper td {
+    display: table-cell;
+    text-align: center;
+    color: white; /* or white, depending on your theme */
+}
+
+.calendar-wrapper tr {
+    all: unset;
+    background-color: #171717;
+    display: table-row;
+}
+
+/* You can also re-apply desired styles from ShadCN's calendar if needed */
+
 
 .sButton{
     display: flex;

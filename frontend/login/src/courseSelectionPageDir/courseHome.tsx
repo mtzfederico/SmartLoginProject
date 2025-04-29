@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {Button} from "@/components/ui/button.tsx";
 
 import recordIcon from "@/assets/NotepadIcon.ico";
@@ -6,6 +6,7 @@ import swipeIcon from "@/assets/SwipeIcon.ico";
 
 export default function CourseHome() {
     // Get the state passed from the previous page
+    const navigate = useNavigate()
     const location = useLocation();
     const { selectedCourse } = location.state || {};  // Fallback in case no data is passed
 
@@ -26,8 +27,8 @@ export default function CourseHome() {
                 <div className={"button-row"} style={{
                     marginTop: "5em",
                 }}>
-                    <Button className="big-button">
-                        <img src={recordIcon} style={{
+                    <Button className="big-button" onClick={() => navigate("/course-records", { state: { selectedCourse: selectedCourse } })}>
+                    <img src={recordIcon} style={{
                             alignItems: "center",
                             justifyContent: "center",
                             width: "11em",
@@ -36,7 +37,7 @@ export default function CourseHome() {
                         <div className="divider"></div>
                         <div className="subtitle">View Records</div>
                     </Button>
-                    <Button className="big-button">
+                    <Button className="big-button" onClick={() => navigate("/swipe", { state: { selectedCourse: selectedCourse } })}>
                         <img src={swipeIcon} style={{
                             alignItems: "center",
                             justifyContent: "center",

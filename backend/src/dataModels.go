@@ -30,7 +30,7 @@ type UserAttendance struct {
 	Name      string `json:"name"`
 	AvatarURL string `json:"avatar_url,omitempty"`
 	Pronouns  string `json:"pronouns,omitempty"`
-	Date      string `json:"date"`
+	Date      *string `json:"date"`
 }
 
 type RegisterIDCardRequest struct {

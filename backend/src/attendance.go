@@ -12,6 +12,7 @@ import (
 func handleSetAttendance(c *gin.Context) {
 	/*
 		curl -X POST "localhost:9091/setAttendance" -H 'Content-Type: application/json' -d '{"cardID": "6363530000196087", "courseID": 31905}'
+		curl -X POST "localhost:9091/setAttendance" -H 'Content-Type: application/json' -d '{"cardID": "6363530000100714", "courseID": 31235}'
 	*/
 
 	if c.Request.Body == nil {
@@ -119,17 +120,39 @@ func addAttendanceToDB(ctx context.Context, studentID int, courseID int) error {
 	return nil
 }
 
+// Aidan modified code, may not work
 func getAttendanceForClass(ctx context.Context, courseID int, startDate, endDate string) ([]UserAttendance, error) {
-	rows, err := db.QueryContext(ctx, "SELECT users.id, users.name, users.pronouns, users.avatarURL, attendance.date FROM users INNER JOIN attendance ON users.id=attendance.studentID WHERE users.role='student' AND attendance.courseID=? AND attendance.date BETWEEN ? AND ?;", courseID, startDate, endDate)
+	rows, err := db.QueryContext(ctx, `
+		SELECT
+			users.id,
+			users.name,
+			users.pronouns,
+			users.avatarURL,
+			COALESCE(MAX(attendance.date), '--:--.--') AS latestAttendance
+		FROM
+			users
+		LEFT JOIN
+			attendance ON users.id = attendance.studentID
+			AND attendance.courseID = ?
+			AND attendance.date BETWEEN ? AND ?
+		WHERE
+			users.role = 'student'
+			AND EXISTS (
+				SELECT 1 FROM UsersInCourse WHERE courseID = ? AND studentID = users.id
+			)
+		GROUP BY
+			users.id, users.name, users.pronouns, users.avatarURL
+	`, courseID, startDate, endDate, courseID)
 	if err != nil {
 		return nil, fmt.Errorf("error querying DB. %w", err)
 	}
 
-	var users []UserAttendance = []UserAttendance{}
-
+	var users []UserAttendance
 	for rows.Next() {
 		var userAttendance UserAttendance
-		rows.Scan(&userAttendance.ID, &userAttendance.Name, &userAttendance.Pronouns, &userAttendance.AvatarURL, &userAttendance.Date)
+		if err := rows.Scan(&userAttendance.ID, &userAttendance.Name, &userAttendance.Pronouns, &userAttendance.AvatarURL, &userAttendance.Date); err != nil {
+			return nil, fmt.Errorf("failed to scan row. %w", err)
+		}
 		users = append(users, userAttendance)
 	}
 
@@ -142,6 +165,8 @@ func getAttendanceForClass(ctx context.Context, courseID int, startDate, endDate
 
 	return users, nil
 }
+
+
 
 // Returns a new v7 UUID.
 // id, err := getNewID()

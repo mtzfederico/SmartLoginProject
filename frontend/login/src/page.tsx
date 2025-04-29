@@ -1,30 +1,30 @@
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import { getSelf } from "@/TS Scripts/getSelf.ts"
+// import { getSelf } from "@/TS Scripts/getSelf.ts"
 
 import '@/Page.css'
 import '@/index.css'
-import {useEffect, useState} from "react";
 
 import appIcon from "@/assets/ScanMo.png";
 import courseIcon from "@/assets/CourseIcon.ico";
+import { refreshData } from '@/TS Scripts/refreshData.ts'
+import {useState} from "react";
 
 export default function Page() {
     const navigate = useNavigate()
-    const [userName, setUserName] = useState<string>("");
+    const [resyncStatus, setResyncStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
 
-    useEffect(() => {
-        async function fetchUser() {
-            try {
-                const name = await getSelf(); // getSelf returns 'name' from Canvas account object
-                setUserName(name);
-            } catch (error) {
-                console.error(error);
-                setUserName("Unknown User");
-            }
+    async function handleResync() {
+        setResyncStatus("loading");
+        try {
+            await refreshData();
+            setResyncStatus("done");
+            setTimeout(() => setResyncStatus("idle"), 3000); // Reset message after 3 seconds
+        } catch (e) {
+            console.error(e);
+            setResyncStatus("error");
         }
-        fetchUser();
-    }, []);
+    }
 
     return (
         <div className="body">
@@ -34,7 +34,7 @@ export default function Page() {
                     justifyContent: "center",
                     width: "35%"
                 }} alt="ScanMo Logo"/>
-                <p className="text-lg text-gray-500">Connected to Canvas as <b> {userName ? userName : "Loading..."} </b></p>
+                <p className="text-lg text-gray-500">Connected to New York Tech Canvas</p>
                 <Button className="big-button" onClick={() => navigate("/course-selection")}>
                     <img src={courseIcon} style={{
                         alignItems: "center",
@@ -47,7 +47,16 @@ export default function Page() {
                 </Button>
             </main>
             <div className={"fixed-bottom"}>
-                <p className={"ps"}> <i> <ins> Not you? Click here to manually set your token </ins> </i> </p>
+                <p className={"ps"}>
+                    <i>
+                        <ins style={{ cursor: 'pointer' }} onClick={handleResync}>
+                            Click here to re-sync database with Canvas
+                        </ins>
+                        {resyncStatus === "loading" && <span> — Syncing...</span>}
+                        {resyncStatus === "done" && <span style={{ color: "green" }}> — Done!</span>}
+                        {resyncStatus === "error" && <span style={{ color: "red" }}> — Failed</span>}
+                    </i>
+                </p>
             </div>
         </div>
     )

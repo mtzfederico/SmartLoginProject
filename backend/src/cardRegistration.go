@@ -15,6 +15,64 @@ var (
 	errCardAlreadyRegistered error = errors.New("Card is already registered")
 )
 
+/// New Aidan code, may not work
+func getUserIDFromCard(ctx context.Context, cardID string) (int, error) {
+	var userID int
+	err := db.QueryRowContext(ctx, "SELECT userID FROM idCard WHERE id = ?", cardID).Scan(&userID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// Card not found
+			return 0, nil
+		}
+		return 0, fmt.Errorf("failed to query cardID: %w", err)
+	}
+	return userID, nil
+}
+
+func handleCheckCard(c *gin.Context) {
+	/*
+		curl -X POST "localhost:9091/checkCard" -H 'Content-Type: application/json' -d '{"cardID": "6363530000196087"}'
+	*/
+
+	if c.Request.Body == nil {
+		c.JSON(400, gin.H{"success": false, "error": "No data received"})
+		return
+	}
+
+	var request struct {
+		CardID string `json:"cardID"`
+	}
+
+	err := c.BindJSON(&request)
+	if err != nil {
+		c.JSON(500, gin.H{"success": false, "error": "Internal Server Error (0), Please try again later"})
+		log.WithField("error", err).Error("[handleCheckCard] Failed to decode JSON")
+		return
+	}
+
+	log.WithFields(log.Fields{"cardID": request.CardID}).Info("[handleCheckCard] Received data")
+
+	if request.CardID == "" {
+		c.JSON(400, gin.H{"success": false, "error": "CardID missing"})
+		return
+	}
+
+	userID, err := getUserIDFromCard(c, request.CardID)
+	if err != nil {
+		c.JSON(500, gin.H{"success": false, "error": "Internal Server Error (1), Please try again later"})
+		log.WithField("error", err).Error("[handleCheckCard] Failed to lookup card")
+		return
+	}
+
+	if userID == 0 {
+		c.JSON(200, gin.H{"success": true, "registered": false})
+	} else {
+		c.JSON(200, gin.H{"success": true, "registered": true, "userID": userID})
+	}
+}
+
+/// End of new Aidan code
+
 func handleRegisterIDCard(c *gin.Context) {
 	/*
 		curl -X POST "localhost:9091/registerIDCard" -H 'Content-Type: application/json' -d '{"studentID": 66159, "courseID": 31905, "cardID": "6363530000196087"}'
@@ -63,6 +121,7 @@ func handleRegisterIDCard(c *gin.Context) {
 
 	c.JSON(200, gin.H{"success": true})
 }
+
 
 func handleGetStudentsWithNoID(c *gin.Context) {
 	/*

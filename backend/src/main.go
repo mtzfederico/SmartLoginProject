@@ -109,6 +109,9 @@ func main() {
 	router.POST("getAttendance", handleGetAttendance)
 	router.GET("refreshData", handleRefreshData)
 
+	/// New Aidan code, may not working
+	router.POST("checkCard", handleCheckCard)
+
 	router.Run(serverConfig.ListenOn)
 }
 

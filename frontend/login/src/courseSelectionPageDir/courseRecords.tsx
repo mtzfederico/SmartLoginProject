@@ -65,11 +65,12 @@ export default function RecordsPage() {
         fetchAttendance();
     }, [courseID, selectedDate]);
 
-    function getShortClassName(): string {
+    function getShortCourseName(): string {
         const nameSplit = courseName.split(' - ');
         const len = nameSplit.length;
         if (len >= 2) {
-            return nameSplit[2];
+            // returns "Programming Language Concepts M01"
+            return nameSplit[2] + " " + nameSplit[1];
         } else if (len === 1) {
             return nameSplit[1];
         }
@@ -82,7 +83,7 @@ export default function RecordsPage() {
             return
         }
 
-        const shortName = getShortClassName();
+        const shortName = getShortCourseName();
 
         const yyyy = selectedDate.getFullYear();
         const mm = String(selectedDate.getMonth() + 1).padStart(2, '0');

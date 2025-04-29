@@ -45,7 +45,16 @@ export default function RecordsPage() {
             const result = await getAttendance({ courseID, startDate, endDate });
 
             if (result.success && result.students) {
-                setAttendance(result.students);
+                const isPlaceholder = (val: string) => val === "--:--.--";
+
+                const sorted = result.students.sort((a, b) => {
+                    if (isPlaceholder(a.date) && !isPlaceholder(b.date)) return 1;
+                    if (!isPlaceholder(a.date) && isPlaceholder(b.date)) return -1;
+                    if (isPlaceholder(a.date) && isPlaceholder(b.date)) return 0;
+                    return a.date.localeCompare(b.date); // or use custom parsing if needed
+                });
+
+                setAttendance(sorted);
             } else {
                 console.error("Failed to get attendance:", result.error);
                 setAttendance([]);

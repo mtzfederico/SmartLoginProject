@@ -99,6 +99,11 @@ button {
   transition: border-color 0.25s;
 }
 
+.uninteractable-override{
+  border: none;
+  cursor: auto;
+}
+
 .icon {
   font-size: 64px; /* make the icon big */
   margin: 1.5em;

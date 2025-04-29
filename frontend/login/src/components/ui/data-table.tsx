@@ -79,7 +79,7 @@ export function DataTable<TData, TValue>({
     };
 
     return (
-        <div>
+        <div className="data-table-stuff">
 
             <div className={"topButtons"}>
                 <Input

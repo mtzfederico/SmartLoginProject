@@ -3,9 +3,12 @@ export interface registerAttendanceRequest {
     courseID: number
 }
 
+import { getBackendURL} from "@/TS Scripts/apiURL.ts";
+
 export async function registerAttendance(request: registerAttendanceRequest): Promise<{ success: boolean; error?: string }> {
     try {
-        const response = await fetch("http://localhost:9091/setAttendance", {
+
+        const response = await fetch(getBackendURL() + '/setAttendance', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

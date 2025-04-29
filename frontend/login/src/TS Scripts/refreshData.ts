@@ -1,8 +1,9 @@
 // refreshData.ts
-export async function refreshData(): Promise<void> {
-    const backend_url = import.meta.env.VITE_BACKEND_URL;
+import { getBackendURL} from "@/TS Scripts/apiURL.ts";
 
-    const res = await fetch(`${backend_url}/refreshData`, {
+export async function refreshData(): Promise<void> {
+
+    const res = await fetch(getBackendURL() + '/refreshData', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
     });

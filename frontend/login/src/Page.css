@@ -75,6 +75,11 @@ tr[data-state="selected"] {
     pointer-events: none;
 }
 
+.data-table-stuff{
+    padding-left: 4em;
+    padding-right: 4em;
+}
+
 
 /* Undo or customize table styling specifically for the calendar */
 .calendar-wrapper table {

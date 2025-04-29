@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { sendSwipe } from "@/TS Scripts/sendSwipe.ts";
 import { registerAttendance } from "@/TS Scripts/registerAttendance.ts";
+import swipeIcon from "@/assets/SwipeIcon.ico";
+import {Button} from "@/components/ui/button.tsx";
 
 export default function SwipePage() {
     const [inputValue, setInputValue] = useState("");
@@ -86,6 +88,17 @@ export default function SwipePage() {
                 className="invisible-input"
                 autoFocus
             />
+
+            <Button className="big-button uninteractable-override">
+                <img src={swipeIcon} style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "11em",
+                    margin: "3.5em",
+                }} alt="Course Icon"/>
+                <div className="divider"></div>
+                <div className="subtitle">Swipe your NYIT ID face up and away from you</div>
+            </Button>
 
             {error && (
                 <div style={{ color: "red", marginTop: "0.5em", fontWeight: "bold" }}>

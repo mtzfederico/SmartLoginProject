@@ -4,9 +4,12 @@ export interface RegisterIDCardRequest {
     cardID: string
 }
 
+import { getBackendURL} from "@/TS Scripts/apiURL.ts";
+
 export async function registerIDCard(request: RegisterIDCardRequest): Promise<{ success: boolean; error?: string }> {
     try {
-        const response = await fetch("http://localhost:9091/registerIDCard", {
+
+        const response = await fetch(getBackendURL() + '/registerIDCard', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

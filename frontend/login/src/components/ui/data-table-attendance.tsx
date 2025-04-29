@@ -50,7 +50,7 @@ export function DataTable<TData, TValue>({
     })
 
     return (
-        <div>
+        <div className="data-table-stuff">
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>

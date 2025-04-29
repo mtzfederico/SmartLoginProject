@@ -11,10 +11,11 @@ const termMap: Record<number, number> = {
     157: 6,
 }
 
-export async function getCourses() {
-    const backend_url = import.meta.env.VITE_BACKEND_URL;
+import { getBackendURL} from "@/TS Scripts/apiURL.ts";
 
-    const res = await fetch(backend_url + '/getCourses', {
+export async function getCourses() {
+
+    const res = await fetch(getBackendURL() + '/getCourses', {
         method: 'GET',
     });
 

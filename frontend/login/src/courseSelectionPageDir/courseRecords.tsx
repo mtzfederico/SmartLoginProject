@@ -25,7 +25,6 @@ export default function RecordsPage() {
     const { selectedCourse } = location.state || {};  // Pull course info passed from CourseHome
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
 
-    // 🔧 Set your course ID here
     const [courseID] = useState<number>(selectedCourse.id)
     const [courseName] = useState<string>(selectedCourse.name)
 
@@ -90,7 +89,7 @@ export default function RecordsPage() {
         const dd = String(selectedDate.getDate()).padStart(2, '0');
 
         // https://stackoverflow.com/questions/44656610/download-a-string-as-txt-file-in-react
-        var csvData = `# ${shortName} ${yyyy}-${mm}-${dd}\nName,Arrival Time,\n`
+        let csvData = `# ${shortName} ${yyyy}-${mm}-${dd}\nName,Arrival Time,\n`
         attendance.forEach(function(value, _) {
 			csvData += value.name + "," + (value.date === "--:--.--" ? "---" : value.date) + ",\n";
         })
@@ -141,7 +140,7 @@ export default function RecordsPage() {
             </div>
             <div className="table-container"
                  style={{
-                     marginTop: "10em"
+                     marginTop: "15em"
                  }}>
                 <DataTable columns={attendanceColumns} data={attendance} />
             </div>

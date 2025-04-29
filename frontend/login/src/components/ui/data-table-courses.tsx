@@ -54,7 +54,7 @@ export function DataTable<TData, TValue>({
     })
 
     return (
-        <div>
+        <div className="data-table-stuff">
             <div className={"topButtons"}>
                 <Input
                     placeholder="Filter course names..."
@@ -64,11 +64,11 @@ export function DataTable<TData, TValue>({
                         table.getColumn("name")?.setFilterValue(event.target.value); // Apply filter
                     }}
                     className="inputSearch"
-                    style={{width: "40%", }}
+                    style={{width: "20em", }}
                 />
                 <Button
                     className={"submitButton"}
-                    style={{ width: "20%" }}
+                    style={{ width: "12em" }}
                     onClick={() => {
                         const selectedRow = table.getSelectedRowModel().rows[0]; // Get the first selected row (if any)
                         if (selectedRow) {

@@ -11,9 +11,12 @@ export interface AttendanceData {
     date: string
 }
 
+import { getBackendURL} from "@/TS Scripts/apiURL.ts";
+
 export async function getAttendance(request: GetAttendanceRequest): Promise<{ success: boolean; students?: AttendanceData[]; error?: string }> {
     try {
-        const response = await fetch("http://localhost:9091/getAttendance", {
+
+        const response = await fetch(getBackendURL() + '/getAttendance', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

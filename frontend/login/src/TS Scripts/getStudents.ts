@@ -1,10 +1,11 @@
 // getStudents.ts
 import {GetStudentsResponse} from "@/students/columns.tsx";
 
-export async function getStudents(courseID: number) {
-    const backend_url = import.meta.env.VITE_BACKEND_URL;
+import { getBackendURL} from "@/TS Scripts/apiURL.ts";
 
-    const res = await fetch(backend_url + '/getStudents', {
+export async function getStudents(courseID: number) {
+
+    const res = await fetch(getBackendURL() + '/getStudents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ "courseID": courseID }),

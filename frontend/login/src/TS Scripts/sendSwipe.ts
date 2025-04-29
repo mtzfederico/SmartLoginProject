@@ -7,10 +7,11 @@ export interface CheckCardResponse {
     error?: string;
 }
 
-export async function sendSwipe(cardID: string): Promise<CheckCardResponse> {
-    const backend_url = import.meta.env.VITE_BACKEND_URL;
+import { getBackendURL} from "@/TS Scripts/apiURL.ts";
 
-    const res = await fetch(backend_url + '/checkCard', {
+export async function sendSwipe(cardID: string): Promise<CheckCardResponse> {
+
+    const res = await fetch(getBackendURL() + '/checkCard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cardID }),

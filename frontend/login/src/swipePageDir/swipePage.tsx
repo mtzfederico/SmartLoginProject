@@ -1,28 +1,40 @@
 import { Input } from "@/components/ui/input.tsx";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { sendSwipe } from "@/TS Scripts/sendSwipe.ts";
 import { registerAttendance } from "@/TS Scripts/registerAttendance.ts";
 
 export default function SwipePage() {
     const [inputValue, setInputValue] = useState("");
-    const [error, setError] = useState(""); // Track error message
+    const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     const navigate = useNavigate();
     const location = useLocation();
     const { selectedCourse } = location.state || {};
+    const inputRef = useRef<HTMLInputElement>(null);
 
+    useEffect(() => {
+        const focusInput = () => {
+            inputRef.current?.focus();
+        };
+
+        focusInput();
+        window.addEventListener("click", focusInput);
+
+        return () => {
+            window.removeEventListener("click", focusInput);
+        };
+    }, []);
 
     async function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
         if (event.key === "Enter") {
             event.preventDefault();
-
             const rawInput = inputValue.trim();
             const validCardPattern = /^;[0-9]{16}\?$/;
 
-            // Validate format
-            if (!validCardPattern.test(inputValue.trim())) {
+            if (!validCardPattern.test(rawInput)) {
                 setError("Invalid card format. Please swipe your NYIT ID");
+                setInputValue("");
                 return;
             }
 
@@ -30,22 +42,19 @@ export default function SwipePage() {
 
             try {
                 const result = await sendSwipe(cleanedCardID);
-                console.log(result);
-
                 if (result.registered) {
                     await registerAttendance({
                         cardID: cleanedCardID,
                         courseID: selectedCourse.id,
                     });
-
                     setSuccessMessage("✅ You have been marked present!");
-                    setTimeout(() => setSuccessMessage(""), 3000); // Clear after 3 seconds
+                    setTimeout(() => setSuccessMessage(""), 3000);
                 } else {
                     navigate("/selection", { state: { cardID: cleanedCardID, selectedCourse } });
                 }
 
                 setInputValue("");
-                setError(""); // Clear any previous error
+                setError("");
             } catch (error) {
                 console.error("Error sending swipe:", error);
                 setError("An error occurred. Please try again.");
@@ -66,14 +75,16 @@ export default function SwipePage() {
             </div>
 
             <Input
+                ref={inputRef}
                 value={inputValue}
                 onChange={(e) => {
                     setInputValue(e.target.value);
-                    setError(""); // Clear error while typing
+                    setError("");
                 }}
                 onKeyDown={handleKeyDown}
                 placeholder="Swipe card here..."
-                className={"inputSearch"}
+                className="invisible-input"
+                autoFocus
             />
 
             {error && (

@@ -11,6 +11,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const httpClientUserAgent string = "SmartLoginProject/1.0"
+
 func handleGetCourses(c *gin.Context) {
 	/*
 		curl "localhost:9091/getCourses"
@@ -68,7 +70,16 @@ func getCoursesInDB(ctx context.Context) ([]Course, error) {
 func getDataFromCanvas(ctx context.Context) error {
 	url := fmt.Sprintf("https://nyit.instructure.com/api/v1/courses/?access_token=%s&per_page=100", serverConfig.CanvasAPIToken)
 
-	resp, err := http.Get(url)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return fmt.Errorf("failed to make request. %w", err)
+	}
+
+	// set User-Agent header
+	req.Header.Set("User-Agent", httpClientUserAgent)
+
+	// make HTTP request
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return fmt.Errorf("failed to get data from canvas. %w", err)
 	}
@@ -112,7 +123,16 @@ func getDataFromCanvas(ctx context.Context) error {
 func getStudentsInCourseFromCanvas(ctx context.Context, courseID int) error {
 	url := fmt.Sprintf("https://nyit.instructure.com/api/v1/courses/%d/users?access_token=%s&enrollment_type[]=student&per_page=100&include[]=avatar_url", courseID, serverConfig.CanvasAPIToken)
 
-	resp, err := http.Get(url)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return fmt.Errorf("failed to make request. %w", err)
+	}
+
+	// set User-Agent header
+	req.Header.Set("User-Agent", httpClientUserAgent)
+
+	// make HTTP request
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return fmt.Errorf("failed to get data from canvas. %w", err)
 	}
@@ -164,10 +184,16 @@ func addStudent(ctx context.Context, student User, courseID int) error {
 		return fmt.Errorf("failed to get a new ID. %w", err)
 	}
 
-	_, err = db.ExecContext(ctx, "INSERT INTO UsersInCourse (id, courseID, studentID, status, lastUpdated) VALUES (?, ?, ?, 'enrolled', now()) ON DUPLICATE KEY UPDATE status='enrolled', lastUpdated=now();", relationID, courseID, student.ID)
+	res, err := db.ExecContext(ctx, "INSERT INTO UsersInCourse (id, courseID, studentID, status, lastUpdated) VALUES (?, ?, ?, 'enrolled', now()) ON DUPLICATE KEY UPDATE status='enrolled', lastUpdated=now();", relationID, courseID, student.ID)
 	if err != nil {
 		return fmt.Errorf("failed to add student to UsersInCourse table. %w", err)
 	}
+
+	n, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to check rows affected. %w", err)
+	}
+	log.WithFields(log.Fields{"rowsAffected": n, "id": student.ID}).Trace("[addStudent] done")
 
 	return nil
 }

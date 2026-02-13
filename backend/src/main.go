@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	_ "embed"
 	"flag"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +17,9 @@ var serverConfig Config
 
 // The database connection pool
 var db *sql.DB
+
+// The http client to send reequest to canvas
+var httpClient *http.Client
 
 func main() {
 	configPath := flag.String("config", "config.yaml", "Path to the configuration file")
@@ -84,6 +88,11 @@ func main() {
 	pingErr := db.Ping()
 	if pingErr != nil {
 		log.WithField("pingErr", pingErr).Fatal("[main] Failed to connect to DB")
+	}
+
+	// create custom HTTP client
+	httpClient = &http.Client{
+		Transport: &http.Transport{},
 	}
 
 	// erro := getDataFromCanva(context.Background())
